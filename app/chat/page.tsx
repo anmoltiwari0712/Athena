@@ -1,3 +1,4 @@
+
 'use client'; 
  
 import { useState, useEffect, useRef } from 'react'; 
@@ -132,10 +133,10 @@ export default function ChatPage() {
          </Link> 
  
          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700"> 
-           <Link href="/chat" className="text-slate-900 font-semibold">Chat</Link> 
-           <Link href="/voice" className="hover:text-slate-900 transition">Voice</Link> 
+           <Link href="/chat" className="text-slate-900 font-semibold">Chat Widget</Link> 
+           <Link href="/voice" className="hover:text-slate-900 transition">Voice IVR</Link> 
            <Link href="/calls" className="hover:text-slate-900 transition">Live Calls</Link> 
-           <Link href="/history" className="hover:text-slate-900 transition">History</Link> 
+           <Link href="/history" className="hover:text-slate-900 transition">Analytics</Link> 
            <Link href="/agent-console" className="hover:text-slate-900 transition">Agent Console</Link> 
          </div> 
  
@@ -150,11 +151,20 @@ export default function ChatPage() {
        <div className="max-w-7xl mx-auto px-6 py-14"> 
          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-blue-300 font-semibold mb-3"> 
            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> 
-           Chat Channel · Browser-Native 
+           Module 01 · Embeddable Chat Widget 
          </div> 
-         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Chat with Athena</h1> 
-         <p className="text-lg text-slate-300 max-w-2xl"> 
-           Same intelligence as the voice channel — without the phone call. Drop Athena into any web or mobile app and resolve refund issues in the same window your customer is already in. 
+         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3"> 
+           The chat widget your customers will see 
+         </h1> 
+         <p className="text-lg text-slate-300 max-w-2xl mb-6"> 
+           Drop Athena into your customer-facing app — Swiggy, Zomato, EatClub, anywhere — with three lines of code. Your customers chat, Athena resolves refunds, your CX team only sees what actually needs them. 
+         </p> 
+         <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md font-mono text-sm"> 
+           <span className="text-emerald-300">$</span> 
+           <span className="text-slate-200">&lt;script src=&quot;https://athena.ai/widget.js&quot; data-app=&quot;your_id&quot;&gt;&lt;/script&gt;</span> 
+         </div> 
+         <p className="text-xs text-slate-400 mt-3 italic"> 
+           Same script tag whether you&apos;re a 1M-DAU food delivery app or a 50-DAU pilot. 
          </p> 
        </div> 
      </div> 
@@ -164,14 +174,13 @@ export default function ChatPage() {
          {/* Left sidebar */} 
          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start"> 
            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Demo guide</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">How food delivery teams deploy this</div> 
              <ol className="space-y-2.5 text-sm text-slate-700"> 
                {[ 
-                 { n: '1', t: 'Say hi', d: 'Athena greets in Hinglish' }, 
-                 { n: '2', t: 'Ask for a refund', d: 'She asks for your phone' }, 
-                 { n: '3', t: 'Use +919876543216', d: 'Real demo order linked' }, 
-                 { n: '4', t: 'Describe the issue', d: 'Cold food, wrong item, etc.' }, 
-                 { n: '5', t: 'Confirm refund', d: 'Real database write happens' }, 
+                 { n: '1', t: 'Embed the widget', d: 'Single script tag in your app' }, 
+                 { n: '2', t: 'Connect your order DB', d: 'Webhook into your refund flow' }, 
+                 { n: '3', t: 'Customize tone & rules', d: 'Match your brand, your tiers' }, 
+                 { n: '4', t: 'Go live', d: '70% of refund tickets auto-resolved' }, 
                ].map((s) => ( 
                  <li key={s.n} className="flex items-start gap-3"> 
                    <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"> 
@@ -187,9 +196,12 @@ export default function ChatPage() {
            </div> 
  
            <div className="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-purple-700 mb-2">Try this</div> 
-             <p className="text-sm text-slate-700 leading-relaxed"> 
-               Get visibly rude on your next message to watch <strong>frustration detection</strong> auto-escalate the chat to a human agent. 
+             <div className="text-xs font-semibold uppercase tracking-wider text-purple-700 mb-2">Try this in the demo</div> 
+             <p className="text-sm text-slate-700 leading-relaxed mb-3"> 
+               Get visibly rude on your next message. Watch <strong>frustration detection</strong> auto-escalate to a human — exactly what would happen in your live app. 
+             </p> 
+             <p className="text-xs text-slate-600 italic"> 
+               &ldquo;This is the third time I&apos;m calling. Manager NOW or I&apos;m going to consumer court.&rdquo; 
              </p> 
            </div> 
  
@@ -197,12 +209,12 @@ export default function ChatPage() {
              href="/voice" 
              className="block p-5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition group" 
            > 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Same agent, different surface</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Module 02</div> 
              <div className="font-bold mb-1 group-hover:translate-x-0.5 transition flex items-center gap-2"> 
-               📞 Get a phone call 
+               📞 Voice IVR Layer 
              </div> 
              <p className="text-xs text-slate-400 leading-relaxed"> 
-               Real Hinglish voice in 5 seconds. 
+               Same brain, picks up your support phone line. 
              </p> 
            </Link> 
          </aside> 
@@ -353,7 +365,7 @@ export default function ChatPage() {
  
              {toolsActivity.length === 0 ? ( 
                <div className="text-xs text-slate-400 italic py-4 text-center"> 
-                 No tools called yet. Share your phone number to watch <code className="font-mono not-italic">lookup_order</code> fire in real time. 
+                 No tools called yet. Share your phone number to watch <code className="font-mono not-italic">lookup_order</code> fire — same flow that runs in your live app. 
                </div> 
              ) : ( 
                <ul className="space-y-2"> 
@@ -378,12 +390,12 @@ export default function ChatPage() {
            </div> 
  
            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Available tools</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Tools wired into your app</div> 
              <ul className="space-y-2 text-sm"> 
                {[ 
-                 { name: 'lookup_order', desc: 'Fetch order by phone' }, 
-                 { name: 'process_refund', desc: 'Issue a refund' }, 
-                 { name: 'escalate_to_human', desc: 'Transfer to agent' }, 
+                 { name: 'lookup_order', desc: 'Hits your order DB' }, 
+                 { name: 'process_refund', desc: 'Calls your refund API' }, 
+                 { name: 'escalate_to_human', desc: 'Pings your CX team' }, 
                ].map((t) => ( 
                  <li key={t.name} className="flex items-center justify-between py-1.5"> 
                    <code className="text-xs font-mono text-slate-900">{t.name}</code> 
@@ -391,28 +403,80 @@ export default function ChatPage() {
                  </li> 
                ))} 
              </ul> 
+             <p className="text-[10px] text-slate-500 italic mt-3 leading-relaxed"> 
+               Webhook-based. Adapts to whatever stack you run — REST, GraphQL, custom. 
+             </p> 
            </div> 
  
            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">Watch it live</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">For your CX team</div> 
              <p className="text-sm text-slate-300 mb-4 leading-relaxed"> 
-               Every chat here writes to the same database the voice channel uses. One source of truth. 
+               Every chat you&apos;d handle here writes to the same database your operations dashboard reads. One source of truth across all channels. 
              </p> 
              <Link 
                href="/calls" 
                className="text-sm font-semibold text-white hover:translate-x-0.5 inline-flex items-center gap-1 transition" 
              > 
-               Open Live Calls dashboard → 
+               See operations dashboard → 
              </Link> 
            </div> 
          </aside> 
        </div> 
  
+       {/* Integration anatomy */} 
+       <div className="mt-16"> 
+         <div className="text-center mb-12"> 
+           <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">Integration anatomy</p> 
+           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-3"> 
+             What goes into your codebase 
+           </h2> 
+           <p className="text-slate-600 max-w-2xl mx-auto"> 
+             No SDKs to install. No models to fine-tune. Just a script tag and three webhooks. 
+           </p> 
+         </div> 
+ 
+         <div className="grid md:grid-cols-3 gap-5 items-stretch"> 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-3">Step 1 · Frontend</div> 
+             <h3 className="font-bold text-lg mb-3 text-black">One script tag</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`<script 
+ src="https://athena.ai/widget.js" 
+ data-app="swiggy_prod" 
+ data-theme="orange" 
+></script>`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               Drops a floating support button in the corner of your app. Branded to match. 
+             </p> 
+           </div> 
+ 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-purple-600 uppercase tracking-widest mb-3">Step 2 · Backend</div> 
+             <h3 className="font-bold text-lg mb-3 text-black">Three webhooks</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`POST /lookup-order 
+POST /process-refund 
+POST /escalate-to-cx`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               Athena calls these. You handle the business logic. We never store customer data. 
+             </p> 
+           </div> 
+ 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-emerald-600 uppercase tracking-widest mb-3">Step 3 · Operations</div> 
+             <h3 className="font-bold text-lg mb-3 text-black">Dashboard URL</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`https://athena.ai/ 
+ ops/swiggy_prod`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               Your CX team logs in here. Live calls, escalation queue, frustration heat-map. 
+             </p> 
+           </div> 
+         </div> 
+       </div> 
+ 
        <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 flex flex-col md:flex-row md:items-center justify-between gap-4"> 
          <div> 
-           <div className="font-semibold text-slate-900 mb-1">This is a real chat — not a mockup</div> 
+           <div className="font-semibold text-slate-900 mb-1">This isn&apos;t a mockup — it&apos;s the real widget</div> 
            <p className="text-sm text-slate-600"> 
-             Refunds you process here are written to a real Supabase database. Tools call real production endpoints. 
+             The chat above writes to a real Supabase database. Tools call real production endpoints. What you experience is what your customers will. 
            </p> 
          </div> 
          <div className="flex gap-3"> 
@@ -420,7 +484,7 @@ export default function ChatPage() {
              View dashboard 
            </Link> 
            <Link href="/voice" className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"> 
-             Try voice instead → 
+             Try voice IVR → 
            </Link> 
          </div> 
        </div> 
@@ -428,3 +492,4 @@ export default function ChatPage() {
    </main> 
  ); 
 } 
+ 
