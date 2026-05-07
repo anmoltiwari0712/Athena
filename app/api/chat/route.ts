@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'messages required' }, { status: 400 });
     }
 
-    const MODEL_CANDIDATES = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    const MODEL_CANDIDATES = ['gemini-2.5-flash'];
 
     for (const modelName of MODEL_CANDIDATES) {
       try {

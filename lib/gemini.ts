@@ -9,10 +9,7 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey || '');
 
 const MODEL_CANDIDATES = [
-  'gemini-2.5-flash',
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-latest',
+  'gemini-2.5-flash'
 ];
 
 const FRUSTRATION_PROMPT = [
