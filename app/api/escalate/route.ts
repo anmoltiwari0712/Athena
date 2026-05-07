@@ -46,31 +46,42 @@ async function handle(req: NextRequest) {
       if (!isNaN(num)) frustration_level = num;
     }
 
-    let handoffSummary: string =
-      typeof conversation_summary === 'string' && conversation_summary.length > 0
-        ? String(conversation_summary)
-        : String(reason);
+    // Build a default handoff summary using available data — no AI needed
+    const fallbackSummary = [
+      `Reason: ${reason}`,
+      `Frustration level: ${frustration_level ?? 'high'}/10`,
+      conversation_summary ? `Context: ${conversation_summary}` : '',
+      `Suggested approach: Acknowledge frustration, offer immediate resolution, escalate to senior staff if needed.`,
+    ]
+      .filter(Boolean)
+      .join('\n');
 
+    let handoffSummary: string = fallbackSummary;
+
+    // Try to enhance with Gemini, but don't block on it
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-      const prompt = `A customer support call is being escalated to a human agent. Generate a CRISP handoff summary (max 4 short bullet points). 
+      const prompt = `Generate a 4-bullet handoff summary for a human agent. 
  
 Reason: ${reason} 
-Frustration level: ${frustration_level ?? 'high'} 
-Context: ${conversation_summary} 
+Frustration: ${frustration_level ?? 'high'}/10 
+Context: ${conversation_summary || 'See transcript'} 
  
-Format: 
+Format (use exactly these bullets): 
 - Customer wants: ... 
 - What AI tried: ... 
 - Why escalated: ... 
 - Suggested approach: ... 
  
-Be concise.`;
+Be concise. Direct. Practical.`;
 
       const result = await model.generateContent(prompt);
-      handoffSummary = result.response.text();
+      const aiText = result.response.text();
+      if (aiText && aiText.length > 20) {
+        handoffSummary = aiText;
+      }
     } catch (e) {
-      console.warn('[escalate] handoff summary failed:', e);
+      console.warn('[escalate] AI handoff summary failed, using fallback:', (e as Error).message);
     }
 
     const { data: escalation, error: escError } = await supabase
