@@ -1,3 +1,5 @@
+
+
 'use client'; 
  
 import { useState } from 'react'; 
@@ -50,21 +52,19 @@ export default function VoicePage() {
  
  return ( 
    <main className="min-h-screen bg-slate-50"> 
-     {/* ===== Top nav ===== */} 
+     {/* Top nav */} 
      <nav className="border-b border-slate-200 sticky top-0 z-50 bg-white/95 backdrop-blur-md"> 
        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"> 
          <Link href="/" className="flex items-center gap-2"> 
-           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold"> 
-             A 
-           </div> 
+           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold">A</div> 
            <span className="font-bold text-lg tracking-tight text-slate-900">Athena</span> 
          </Link> 
  
          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700"> 
-           <Link href="/chat" className="hover:text-slate-900 transition">Chat</Link> 
-           <Link href="/voice" className="text-slate-900 font-semibold">Voice</Link> 
+           <Link href="/chat" className="hover:text-slate-900 transition">Chat Widget</Link> 
+           <Link href="/voice" className="text-slate-900 font-semibold">Voice IVR</Link> 
            <Link href="/calls" className="hover:text-slate-900 transition">Live Calls</Link> 
-           <Link href="/history" className="hover:text-slate-900 transition">History</Link> 
+           <Link href="/history" className="hover:text-slate-900 transition">Analytics</Link> 
            <Link href="/agent-console" className="hover:text-slate-900 transition">Agent Console</Link> 
          </div> 
  
@@ -74,35 +74,42 @@ export default function VoicePage() {
        </div> 
      </nav> 
  
-     {/* ===== Header strip ===== */} 
+     {/* Header strip */} 
      <div className="bg-gradient-to-br from-purple-950 via-slate-950 to-blue-950 text-white"> 
        <div className="max-w-7xl mx-auto px-6 py-14"> 
          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-purple-300 font-semibold mb-3"> 
            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> 
-           Voice Channel · Live Telephony 
+           Module 02 · Voice IVR Layer 
          </div> 
          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3"> 
-           Talk to Athena. Right now. 
+           Replace your IVR. Keep your humans for the hard cases. 
          </h1> 
-         <p className="text-lg text-slate-300 max-w-2xl"> 
-           Enter your number. Athena calls you back in under ten seconds — in fluent Hinglish, with order lookup, refund processing, and human escalation built in. No queue. No IVR. No script. 
+         <p className="text-lg text-slate-300 max-w-2xl mb-6"> 
+           Forward your support number to Athena. She picks up first, resolves the easy 70%, and warm-transfers angry customers to your senior agents — with a full handoff summary already prepared. 
+         </p> 
+         <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md font-mono text-sm"> 
+           <span className="text-emerald-300">$</span> 
+           <span className="text-slate-200">forward 1800-CUSTOMER-CARE → Athena (5 sec setup)</span> 
+         </div> 
+         <p className="text-xs text-slate-400 mt-3 italic"> 
+           Drop into your existing call routing. No app changes. No customer education. 
          </p> 
        </div> 
      </div> 
  
-     {/* ===== Main area ===== */} 
+     {/* Main area */} 
      <div className="max-w-7xl mx-auto px-6 py-10"> 
        <div className="grid lg:grid-cols-[280px_1fr_280px] gap-6"> 
-         {/* === Left sidebar === */} 
+         {/* Left sidebar */} 
          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start"> 
            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">How it works</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Where Athena fits in your call routing</div> 
              <ol className="space-y-3 text-sm text-slate-700"> 
                {[ 
-                 { n: '1', t: 'Enter your number', d: 'Indian mobile, no signup' }, 
-                 { n: '2', t: 'Athena dials in 5 sec', d: 'Powered by Bolna telephony' }, 
-                 { n: '3', t: 'Pick up and talk', d: 'Hinglish, English, or Hindi' }, 
-                 { n: '4', t: 'Resolved or escalated', d: 'In under 3 minutes' }, 
+                 { n: '1', t: 'Customer dials your number', d: 'No change for them' }, 
+                 { n: '2', t: 'Athena picks up first', d: 'Hinglish, instant, never on hold' }, 
+                 { n: '3', t: 'Resolves or escalates', d: '70% never need a human' }, 
+                 { n: '4', t: 'Warm handoff to senior agent', d: 'Full context preloaded' }, 
                ].map((s) => ( 
                  <li key={s.n} className="flex items-start gap-3"> 
                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[11px] font-bold flex-shrink-0"> 
@@ -120,7 +127,7 @@ export default function VoicePage() {
            <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200"> 
              <div className="text-xs font-semibold uppercase tracking-wider text-amber-700 mb-2">Demo data</div> 
              <p className="text-sm text-slate-700 leading-relaxed mb-2"> 
-               When Athena asks for your phone number, give her <code className="font-mono bg-white px-1.5 py-0.5 rounded text-xs">+919876543216</code>. That's a seeded order — Sushi Platter, ₹1800 — so she'll have something real to refund. 
+               When Athena asks for your phone, give <code className="font-mono bg-white px-1.5 py-0.5 rounded text-xs">+919876543216</code>. That&apos;s a seeded order — Sushi Platter, ₹1800 — so she has something real to refund. 
              </p> 
            </div> 
  
@@ -128,14 +135,14 @@ export default function VoicePage() {
              <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Try this script</div> 
              <div className="space-y-2 text-sm text-slate-700"> 
                <div className="text-xs text-slate-500">Refund flow:</div> 
-               <p className="italic">"My biryani came cold. I want a full refund."</p> 
-               <div className="text-xs text-slate-500 pt-2 border-t border-slate-100">Escalation flow:</div> 
-               <p className="italic">"This is the third time I'm calling. Connect me to a manager NOW."</p> 
+               <p className="italic">&ldquo;My biryani came cold. I want a full refund.&rdquo;</p> 
+               <div className="text-xs text-slate-500 pt-2 border-t border-slate-100">Trigger escalation:</div> 
+               <p className="italic">&ldquo;This is the third time I&apos;m calling. Connect me to a manager NOW.&rdquo;</p> 
              </div> 
            </div> 
          </aside> 
  
-         {/* === Center: Form / Status === */} 
+         {/* Center: Form / Status */} 
          <section className="rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/30 overflow-hidden"> 
            {status === 'idle' && ( 
              <div className="p-10"> 
@@ -143,8 +150,8 @@ export default function VoicePage() {
                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 text-white text-3xl mb-5 shadow-lg shadow-purple-500/30"> 
                    📞 
                  </div> 
-                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Where should Athena call?</h2> 
-                 <p className="text-slate-600 text-sm">Indian mobile numbers only. Your number is used once and never stored.</p> 
+                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Experience what your customers will</h2> 
+                 <p className="text-slate-600 text-sm">Enter your number. Athena calls back in under ten seconds. Same flow she runs in production for live customers.</p> 
                </div> 
  
                <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4"> 
@@ -196,7 +203,7 @@ export default function VoicePage() {
                  </div> 
                </div> 
                <h2 className="text-2xl font-bold text-slate-900 mb-2">Connecting you to Athena…</h2> 
-               <p className="text-slate-600 text-sm">Reaching out via Bolna's telephony layer</p> 
+               <p className="text-slate-600 text-sm">Routing through Bolna&apos;s telephony layer</p> 
              </div> 
            )} 
  
@@ -207,11 +214,11 @@ export default function VoicePage() {
                </div> 
                <h2 className="text-2xl font-bold text-slate-900 mb-2">Call placed successfully</h2> 
                <p className="text-slate-600 text-sm mb-6"> 
-                 <span className="font-mono font-semibold text-slate-900">{successPhone}</span> should ring within 5–10 seconds. Pick up to start your refund flow with Athena. 
+                 <span className="font-mono font-semibold text-slate-900">{successPhone}</span> should ring within 5–10 seconds. Pick up to start your refund flow. 
                </p> 
  
                <div className="max-w-md mx-auto p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 mb-6 text-left"> 
-                 <div className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">When she picks up</div> 
+                 <div className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">Reviewer&apos;s playbook</div> 
                  <ul className="space-y-2 text-sm text-slate-700"> 
                    <li className="flex items-start gap-2"> 
                      <span className="text-blue-600 mt-0.5">→</span> 
@@ -227,7 +234,7 @@ export default function VoicePage() {
                    </li> 
                    <li className="flex items-start gap-2"> 
                      <span className="text-blue-600 mt-0.5">→</span> 
-                     Get angry to trigger an automatic escalation 
+                     Get angry to trigger an automatic human handoff 
                    </li> 
                  </ul> 
                </div> 
@@ -254,7 +261,7 @@ export default function VoicePage() {
                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 text-red-600 text-3xl mb-6"> 
                  ⚠️ 
                </div> 
-               <h2 className="text-2xl font-bold text-slate-900 mb-2">Couldn't place the call</h2> 
+               <h2 className="text-2xl font-bold text-slate-900 mb-2">Couldn&apos;t place the call</h2> 
                <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto"> 
                  {errorMsg} 
                </p> 
@@ -276,16 +283,16 @@ export default function VoicePage() {
            )} 
          </section> 
  
-         {/* === Right sidebar === */} 
+         {/* Right sidebar */} 
          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start"> 
            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">What you'll experience</div> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">What happens during a real call</div> 
              <ul className="space-y-3 text-sm"> 
                {[ 
                  { icon: '🎯', t: 'Real-time emotion scoring', d: 'Each turn rated 1-10 by Gemini' }, 
-                 { icon: '🔧', t: 'Live tool execution', d: 'Refunds written to live database' }, 
-                 { icon: '🤝', t: 'Smart human handoff', d: 'Auto-escalates if frustration spikes' }, 
-                 { icon: '📝', t: 'Full call transcript', d: 'Available on the dashboard' }, 
+                 { icon: '🔧', t: 'Live tool execution', d: 'Refunds written to your DB' }, 
+                 { icon: '🤝', t: 'Auto handoff at frustration 7+', d: 'Senior agent picks up with context' }, 
+                 { icon: '📝', t: 'Full call transcript saved', d: 'Searchable in your dashboard' }, 
                ].map((f) => ( 
                  <li key={f.t} className="flex items-start gap-3"> 
                    <div className="text-lg flex-shrink-0">{f.icon}</div> 
@@ -309,10 +316,71 @@ export default function VoicePage() {
                ))} 
              </div> 
            </div> 
+ 
+           <Link 
+             href="/agent-console" 
+             className="block p-5 rounded-2xl bg-white border border-slate-200 hover:border-red-300 transition group shadow-sm" 
+           > 
+             <div className="text-xs font-semibold uppercase tracking-wider text-red-600 mb-2">Module 03</div> 
+             <div className="font-bold mb-1 text-slate-900 group-hover:translate-x-0.5 transition flex items-center gap-2"> 
+               🚨 Agent Console 
+             </div> 
+             <p className="text-xs text-slate-500 leading-relaxed"> 
+               Where escalations land. Pre-loaded handoff summaries. 
+             </p> 
+           </Link> 
          </aside> 
        </div> 
  
-       {/* ===== Footer info ===== */} 
+       {/* Integration anatomy */} 
+       <div className="mt-16"> 
+         <div className="text-center mb-12"> 
+           <p className="text-sm font-semibold text-purple-600 uppercase tracking-widest mb-3">Integration anatomy</p> 
+           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-3"> 
+             How Voice IVR plugs into your call center 
+           </h2> 
+           <p className="text-slate-600 max-w-2xl mx-auto"> 
+             No PBX rewiring. No custom telephony work. Forward, configure, monitor. 
+           </p> 
+         </div> 
+ 
+         <div className="grid md:grid-cols-3 gap-5 items-stretch"> 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-3">Step 1 · Forward</div> 
+             <h3 className="font-bold text-lg mb-3">Point your number at us</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`# In your PBX 
+forward +1800-XXX-XXXX 
+  to athena.ai/voice/swiggy`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               Standard SIP forwarding. Works with Plivo, Twilio, Exotel, your in-house PBX. 
+             </p> 
+           </div> 
+ 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-purple-600 uppercase tracking-widest mb-3">Step 2 · Configure</div> 
+             <h3 className="font-bold text-lg mb-3">Set escalation rules</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`escalate_at: 7 
+auto_refund_max: 1500 
+languages: ["hi", "en"] 
+handoff_to: cx_team`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               Tier rules, language preferences, and handoff destinations — your business logic, our voice layer. 
+             </p> 
+           </div> 
+ 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col"> 
+             <div className="text-xs font-semibold text-emerald-600 uppercase tracking-widest mb-3">Step 3 · Monitor</div> 
+             <h3 className="font-bold text-lg mb-3">Live ops dashboard</h3> 
+             <pre className="flex-1 text-xs font-mono bg-slate-900 text-slate-100 border border-slate-800 rounded-lg p-4 overflow-x-auto leading-relaxed min-h-[160px] flex items-center whitespace-pre">{`https://athena.ai/ 
+ ops/swiggy_prod/calls`}</pre> 
+             <p className="text-xs text-slate-500 mt-3 leading-relaxed"> 
+               CX leads watch frustration scores spike in real-time. Triage before customers hit Twitter. 
+             </p> 
+           </div> 
+         </div> 
+       </div> 
+ 
+       {/* Footer info */} 
        <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 flex flex-col md:flex-row md:items-center justify-between gap-4"> 
          <div> 
            <div className="font-semibold text-slate-900 mb-1">This is a real telephony call — costs roughly ₹8 per minute</div> 
@@ -333,3 +401,4 @@ export default function VoicePage() {
    </main> 
  ); 
 } 
+ 
