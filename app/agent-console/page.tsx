@@ -54,16 +54,16 @@ export default function AgentConsole() {
           </Link>
           <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
             <Link href="/chat" className="hover:text-slate-900 transition">
-              Chat
+              Chat Widget
             </Link>
             <Link href="/voice" className="hover:text-slate-900 transition">
-              Voice
+              Voice IVR
             </Link>
             <Link href="/calls" className="hover:text-slate-900 transition">
               Live Calls
             </Link>
             <Link href="/history" className="hover:text-slate-900 transition">
-              History
+              Analytics
             </Link>
             <Link href="/agent-console" className="text-slate-900 font-semibold">
               Agent Console
@@ -80,16 +80,22 @@ export default function AgentConsole() {
 
       {/* Header strip */}
       <div className="bg-gradient-to-br from-red-950 via-slate-950 to-orange-950 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="max-w-7xl mx-auto px-6 py-14">
           <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-red-300 font-semibold mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-            Human-in-the-Loop · Live Queue
+            Human-in-the-Loop · Senior Agent Console
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Agent Console</h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            When Athena escalates, this is what your human agents see. Full handoff context,
-            frustration score, and a one-click acceptance flow — so customers feel heard, not
-            bounced.
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+            Where AI hands off, humans pick up
+          </h1>
+          <p className="text-lg text-slate-300 max-w-2xl mb-2">
+            When Athena escalates, this is the screen your senior CX agent opens. Frustration score,
+            AI-generated handoff summary, full conversation context — already loaded. They walk into
+            the call already informed.
+          </p>
+          <p className="text-xs text-slate-400 italic mt-4">
+            The 5% of cases that need a human get one — and they get one ready to win the customer
+            back.
           </p>
         </div>
       </div>
@@ -100,8 +106,11 @@ export default function AgentConsole() {
           <aside className="lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-4">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Escalations Queue
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Escalation Queue
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Newest at top</div>
                 </div>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold">
                   {escalations.length}
@@ -110,7 +119,8 @@ export default function AgentConsole() {
 
               {escalations.length === 0 && (
                 <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-slate-500 text-sm text-center">
-                  No escalations yet. When Athena hands off, escalations appear here in real-time.
+                  No escalations in queue. When Athena hands off a call, it appears here in
+                  real-time — your agents see it the second it lands.
                 </div>
               )}
 
@@ -161,13 +171,13 @@ export default function AgentConsole() {
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold uppercase tracking-wider text-red-700 mb-2 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Incoming Escalation
+                        Incoming Escalation · Customer Waiting
                       </div>
                       <h2 className="text-2xl font-bold text-slate-900 leading-tight">
                         {active.reason}
                       </h2>
                       <div className="text-xs text-slate-500 mt-1.5">
-                        Created {new Date(active.created_at).toLocaleString()}
+                        Handoff received {new Date(active.created_at).toLocaleString()}
                       </div>
                     </div>
                     {active.frustration_level !== null && (
@@ -185,10 +195,10 @@ export default function AgentConsole() {
                   <div className="flex gap-3 pt-4 border-t border-red-200">
                     <button className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 text-white font-bold text-sm hover:opacity-90 transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2">
                       <span>📞</span>
-                      Accept & Take Over
+                      Accept &amp; Take Over
                     </button>
                     <button className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">
-                      Pass
+                      Pass to teammate
                     </button>
                   </div>
                 </div>
@@ -197,9 +207,14 @@ export default function AgentConsole() {
                 {active.handoff_summary && (
                   <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
                     <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                      <div className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                        <span>🤖</span>
-                        AI-Generated Handoff Summary
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                          <span>🤖</span>
+                          AI-Generated Handoff Summary
+                        </div>
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          Read this before you pick up the call
+                        </div>
                       </div>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-semibold">
                         Powered by Gemini
@@ -222,7 +237,7 @@ export default function AgentConsole() {
                         Conversation Context
                       </div>
                       <div className="text-xs text-slate-500 mt-0.5">
-                        What happened before escalation
+                        What Athena already discussed with the customer
                       </div>
                     </div>
                     <div className="p-5">
@@ -236,14 +251,14 @@ export default function AgentConsole() {
                 {/* Quick actions */}
                 <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
                   <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
-                    Suggested Next Steps
+                    Suggested next steps
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { icon: '💰', label: 'Process full refund' },
-                      { icon: '🎁', label: 'Offer compensation' },
+                      { icon: '🎁', label: 'Offer credits + apology' },
                       { icon: '📝', label: 'Add internal note' },
-                      { icon: '🚫', label: 'Mark as resolved' },
+                      { icon: '✓', label: 'Mark as resolved' },
                     ].map((a) => (
                       <button
                         key={a.label}
@@ -258,10 +273,81 @@ export default function AgentConsole() {
               </div>
             ) : (
               <div className="p-16 rounded-2xl bg-white border border-slate-200 text-center text-slate-500">
-                Select an escalation from the queue to view details and accept the call.
+                Select an escalation from the queue to view the AI handoff summary and accept the
+                customer.
               </div>
             )}
           </section>
+        </div>
+
+        {/* What this enables */}
+        <div className="mt-16">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold text-red-600 uppercase tracking-widest mb-3">
+              Why this matters
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-3">
+              Your senior agents stay senior
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
+              No more burning out top-tier humans on routine refund tickets. They only see the cases
+              that genuinely need their judgment — and they walk in already informed.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200">
+              <div className="text-2xl mb-3">⏱️</div>
+              <div className="font-semibold text-slate-900 mb-2">Zero context loss</div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Your agent reads the AI handoff in 15 seconds. No &ldquo;sorry, can you start from
+                the beginning?&rdquo; No customer telling their story for the third time.
+              </p>
+            </div>
+            <div className="p-6 rounded-2xl bg-white border border-slate-200">
+              <div className="text-2xl mb-3">🎯</div>
+              <div className="font-semibold text-slate-900 mb-2">Pre-suggested resolutions</div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Athena recommends what would close the case — full refund, credits, replacement.
+                Your agent approves or overrides. Decision time drops to seconds.
+              </p>
+            </div>
+            <div className="p-6 rounded-2xl bg-white border border-slate-200">
+              <div className="text-2xl mb-3">🛡️</div>
+              <div className="font-semibold text-slate-900 mb-2">
+                Better outcomes for the customer
+              </div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Frustrated customers get the right person in under a minute, with someone who
+                already knows what&apos;s wrong. Recovery NPS goes from negative to positive.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Closing CTA */}
+        <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 text-white border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="font-semibold mb-1">Want to see Athena handle a real escalation?</div>
+            <p className="text-sm text-slate-400">
+              Get a call. Get angry. Watch this exact screen update in real-time as the handoff
+              lands.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Link
+              href="/calls"
+              className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-sm font-medium text-white hover:bg-white/20 transition"
+            >
+              View live calls
+            </Link>
+            <Link
+              href="/voice"
+              className="px-4 py-2 rounded-lg bg-white text-slate-900 text-sm font-semibold hover:opacity-90 transition"
+            >
+              Trigger a real escalation →
+            </Link>
+          </div>
         </div>
       </div>
     </main>
