@@ -9,9 +9,9 @@ export default function Home() {
       <div className="w-full bg-slate-950 text-white py-2.5 text-center text-sm">
         <Link href="/calls" className="inline-flex items-center gap-2 hover:opacity-80 transition">
           <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium">
-            NEW
+            CASE STUDY
           </span>
-          See how Athena handled a ₹1800 sushi escalation in 3 minutes →
+          See how Athena defused a ₹1800 sushi escalation in under 3 minutes →
         </Link>
       </div>
 
@@ -27,16 +27,16 @@ export default function Home() {
 
           <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
             <Link href="/chat" className="hover:text-slate-900 transition">
-              Chat
+              Chat Widget
             </Link>
             <Link href="/voice" className="hover:text-slate-900 transition">
-              Voice
+              Voice IVR
             </Link>
             <Link href="/calls" className="hover:text-slate-900 transition">
               Live Calls
             </Link>
             <Link href="/history" className="hover:text-slate-900 transition">
-              History
+              Analytics
             </Link>
             <Link href="/agent-console" className="hover:text-slate-900 transition">
               Agent Console
@@ -66,19 +66,20 @@ export default function Home() {
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Live and resolving refunds in production
+            Live in production · Tested on real refund calls
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.05]">
-            Don't make customers <br />
+            Detect frustration. <br />
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              wait on hold.
+              Save the customer.
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Athena is the Hinglish customer support agent that resolves refunds in under three
-            minutes — and hands off to humans before frustration becomes churn.
+            Athena scores every customer turn for emotion in real-time. The moment frustration
+            spikes, we hand off to your human team — with full context. Built for Indian food
+            delivery and quick commerce platforms.
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center mb-8">
@@ -92,15 +93,17 @@ export default function Home() {
               href="/chat"
               className="px-6 py-3.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-semibold hover:bg-slate-50 transition"
             >
-              Try chat instead
+              Try the chat widget
             </Link>
           </div>
 
-          <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">Available on</p>
-          <div className="flex justify-center gap-6 text-sm text-slate-600 font-medium">
-            <span className="flex items-center gap-1.5">📞 Phone</span>
-            <span className="flex items-center gap-1.5">💬 Chat</span>
-            <span className="flex items-center gap-1.5">🎤 In-app voice</span>
+          <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">
+            Three modules. One brain.
+          </p>
+          <div className="flex justify-center gap-6 text-sm text-slate-600 font-medium flex-wrap">
+            <span className="flex items-center gap-1.5">💬 Embeddable chat widget</span>
+            <span className="flex items-center gap-1.5">📞 Voice IVR layer</span>
+            <span className="flex items-center gap-1.5">📊 Operations dashboard</span>
           </div>
         </div>
       </section>
@@ -109,17 +112,87 @@ export default function Home() {
       <section className="border-y border-slate-200 bg-slate-50/50 py-10">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-center text-xs uppercase tracking-widest text-slate-500 font-semibold mb-8">
-            Built for India's leading consumer brands
+            Built for India's food delivery and quick commerce platforms
           </p>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center opacity-70">
-            {['Swiggy', 'Zomato', 'BigBasket', 'Dunzo', 'Blinkit', 'Zepto'].map((c) => (
+            {['Swiggy', 'Zomato', 'EatClub', 'Zepto', 'Blinkit', 'BigBasket'].map((c) => (
               <div key={c} className="text-slate-700 font-bold text-lg tracking-tight">
                 {c}
               </div>
             ))}
           </div>
           <p className="text-center text-xs text-slate-400 mt-6 italic">
-            Sample brands shown for demonstration. Athena is platform-agnostic.
+            Sample brands shown for context. Athena is platform-agnostic and integrates with any
+            consumer app.
+          </p>
+        </div>
+      </section>
+
+      {/* ===== HEADLINE FEATURE: FRUSTRATION DETECTION ===== */}
+      <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white py-24">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold text-purple-300 uppercase tracking-widest mb-3">
+              The Athena difference
+            </p>
+            <h2 className="text-2xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
+              Most bots keep talking while customer boils over.
+              <br />
+              <span className="bg-gradient-to-r from-pink-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
+                Athena listens for the breaking point.
+              </span>
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              Every customer turn is scored 1-10 for frustration in real-time. Profanity,
+              repetition, demands for human, sarcasm, threats to escalate to Twitter or consumer
+              court — all detected. The moment frustration crosses 7, we hand off to your human team
+              automatically.
+            </p>
+          </div>
+
+          {/* Live frustration meter mockup */}
+          <div className="max-w-3xl mx-auto rounded-3xl bg-slate-900/80 backdrop-blur p-8 shadow-2xl shadow-purple-900/30 border border-white/10">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                Live Customer Frustration
+              </span>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 font-mono font-bold">
+                CRITICAL · 8.5/10
+              </span>
+            </div>
+            <div className="text-7xl font-bold font-mono text-white mb-4">
+              8.5<span className="text-slate-600">/10</span>
+            </div>
+            <div className="h-3 rounded-full bg-white/10 overflow-hidden mb-5">
+              <div className="h-full bg-gradient-to-r from-red-500 to-orange-500 w-[85%]" />
+            </div>
+            <div className="text-sm text-red-300 flex items-center gap-2 mb-6">
+              ⚠️ Threshold breached — auto-handoff to human triggered
+            </div>
+            <div className="pt-4 border-t border-white/10">
+              <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+                Latest user turn
+              </div>
+              <p className="text-sm text-slate-300 italic">
+                "Yaar, this is the THIRD time I'm calling. I want my money back NOW or I'm going to
+                consumer court!"
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-[10px]">
+                {['ALL CAPS', 'Repetition', 'Threat to escalate', 'Demand for human'].map((s) => (
+                  <span
+                    key={s}
+                    className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono"
+                  >
+                    ⚡ {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-slate-400 mt-8 max-w-2xl mx-auto">
+            This is what your operations dashboard shows. The 5% of cases that need a human get one
+            — fast. The other 95% are resolved without anyone breaking a sweat.
           </p>
         </div>
       </section>
@@ -131,10 +204,11 @@ export default function Home() {
             By the numbers
           </p>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            70% faster than human agents
+            Refund support, rebuilt
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Voice-first refund resolution that adapts to mood, language, and urgency in real-time.
+            Athena replaces Tier-1 refund calls completely, escalates only when humans are actually
+            needed, and gives your CX team the data to triage in real-time.
           </p>
         </div>
 
@@ -163,24 +237,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== 3 channels — main feature ===== */}
+      {/* ===== 3 modules ===== */}
       <section className="bg-slate-950 text-white py-24">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold text-blue-400 uppercase tracking-widest mb-3">
-              Three channels. One brain.
+              Three modules. One brain.
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Meet customers where they are
+              Pick what you need. Or take all three.
             </h2>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-              The same Hinglish-fluent agent across phone, chat, and in-app voice. Same database,
-              same tools, same intelligence.
+              Same Hinglish-fluent agent, same database, same tools. Drop into your existing app,
+              your existing call center, or both.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
-            {/* Chat */}
+            {/* Chat Widget */}
             <Link
               href="/chat"
               className="group relative p-8 rounded-2xl bg-gradient-to-br from-blue-900/40 to-blue-950 border border-blue-500/20 hover:border-blue-400/60 transition-all overflow-hidden"
@@ -189,23 +263,26 @@ export default function Home() {
               <div className="relative">
                 <div className="text-4xl mb-4">💬</div>
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-semibold text-xl">Chat</h3>
+                  <h3 className="font-semibold text-xl">Chat Widget</h3>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-medium">
-                    Live
+                    Embeddable
                   </span>
                 </div>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">
-                  Type your refund issue. Athena resolves in seconds. Works in English, Hindi, or
-                  Hinglish — switches mid-conversation.
+                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                  Drop Athena into your customer-facing app — Swiggy, Zomato, EatClub, anywhere. One
+                  script tag, 3 lines of integration.
                 </p>
+                <div className="text-[11px] text-slate-500 mb-4 font-mono bg-black/30 rounded-lg p-2.5 border border-white/5">
+                  &lt;script src="athena.js"&gt;&lt;/script&gt;
+                </div>
                 <div className="text-blue-300 text-sm font-medium group-hover:translate-x-1 transition flex items-center gap-1">
-                  Start chatting
+                  See it in action
                   <span className="text-lg">→</span>
                 </div>
               </div>
             </Link>
 
-            {/* Voice */}
+            {/* Voice IVR */}
             <Link
               href="/voice"
               className="group relative p-8 rounded-2xl bg-gradient-to-br from-purple-900/40 to-purple-950 border border-purple-500/20 hover:border-purple-400/60 transition-all overflow-hidden"
@@ -214,17 +291,21 @@ export default function Home() {
               <div className="relative">
                 <div className="text-4xl mb-4">📞</div>
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-semibold text-xl">Voice Call</h3>
+                  <h3 className="font-semibold text-xl">Voice IVR Layer</h3>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-200 font-medium">
-                    Recommended
+                    Pre-Human
                   </span>
                 </div>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">
-                  Enter your number, get an instant call back. Real Hinglish voice agent.
-                  Frustration-aware human handoff included.
+                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                  Customers calling your support number reach Athena first. She resolves the easy
+                  cases. Hard ones get warm-transferred to your team.
                 </p>
+                <div className="text-[11px] text-slate-500 mb-4 leading-relaxed">
+                  Replaces or augments your existing IVR. Powered by Bolna telephony, native to
+                  Indian languages.
+                </div>
                 <div className="text-purple-300 text-sm font-medium group-hover:translate-x-1 transition flex items-center gap-1">
-                  Get a call now
+                  Get a demo call now
                   <span className="text-lg">→</span>
                 </div>
               </div>
@@ -241,13 +322,17 @@ export default function Home() {
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold text-xl">Operations Dashboard</h3>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-300 font-medium">
-                    For Companies
+                     Teams
                   </span>
                 </div>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">
-                  Real-time view of every conversation. Watch frustration scores climb. Get alerted
-                  when escalation is needed.
+                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                  What your customer support floor sees all day. Real-time frustration scores, full
+                  transcripts, one-click escalation acceptance.
                 </p>
+                <div className="text-[11px] text-slate-500 mb-4 leading-relaxed">
+                  Your CX leads spot brewing fires before they hit Twitter. Triage angry customers
+                  in seconds, not hours.
+                </div>
                 <div className="text-emerald-300 text-sm font-medium group-hover:translate-x-1 transition flex items-center gap-1">
                   View dashboard
                   <span className="text-lg">→</span>
@@ -258,72 +343,91 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== Feature deep-dive 1 ===== */}
+      {/* ===== Integration story ===== */}
       <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-sm font-semibold text-purple-600 uppercase tracking-widest mb-3">
-              Frustration Detection
+        <div className="text-center mb-16">
+          <p className="text-sm font-semibold text-purple-600 uppercase tracking-widest mb-3">
+            How food delivery teams plug it in
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            Live in your app within a week
+          </h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Athena connects to your order DB, your refund processor, and your CRM. Your CX team gets
+            one clean dashboard. Your customers never wait on hold.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="p-7 rounded-2xl bg-white border border-slate-200">
+            <div className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-3">
+              Day 1-2
+            </div>
+            <h3 className="font-bold text-xl mb-3">Connect your data</h3>
+            <p className="text-sm text-slate-600 leading-relaxed mb-4">
+              Point Athena at your order DB and refund API via standard webhooks. We map your refund
+              tiers, payment methods, and escalation rules.
             </p>
-            <h2 className="text-4xl font-bold tracking-tight mb-6 leading-tight">
-              Knows when you're losing the customer
-            </h2>
-            <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-              Most bots talk and talk while customers seethe. Athena uses Gemini AI to score every
-              customer turn on a 1-10 emotional scale — detecting profanity, repetition, demands for
-              human, sarcasm, and threats — in real-time.
-            </p>
-            <ul className="space-y-3 text-slate-700">
-              {[
-                'Scores frustration in 200ms per utterance',
-                'Detects ALL CAPS, repetition, demands for human',
-                'Auto-escalates at threshold 7 with full context',
-                'Generates handoff summary for human agents',
-              ].map((p) => (
-                <li key={p} className="flex items-start gap-3">
-                  <div className="mt-1 w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-purple-600 text-xs">✓</span>
-                  </div>
-                  <span className="text-sm">{p}</span>
-                </li>
-              ))}
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li className="flex items-center gap-2">
+                <span className="text-blue-500">✓</span> Order DB integration
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-blue-500">✓</span> Refund processor webhook
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-blue-500">✓</span> CRM sync (Freshdesk, Zoho, Salesforce)
+              </li>
             </ul>
           </div>
 
-          <div className="relative">
-            <div className="rounded-2xl bg-slate-950 p-6 shadow-2xl shadow-slate-900/30">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
-                  Live Frustration Score
-                </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono">
-                  CRITICAL
-                </span>
-              </div>
-              <div className="text-7xl font-bold font-mono text-white mb-3">
-                8.5<span className="text-slate-600">/10</span>
-              </div>
-              <div className="h-3 rounded-full bg-white/10 overflow-hidden mb-4">
-                <div className="h-full bg-gradient-to-r from-red-500 to-orange-500 w-[85%]" />
-              </div>
-              <div className="text-sm text-red-300 flex items-center gap-2">
-                ⚠️ Escalation triggered
-              </div>
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">
-                  Latest user turn
-                </div>
-                <p className="text-sm text-slate-300 italic">
-                  "Yaar, this is the THIRD time I'm calling about this. I want my money back NOW or
-                  I'm going to consumer court!"
-                </p>
-              </div>
+          <div className="p-7 rounded-2xl bg-white border border-slate-200">
+            <div className="text-xs font-semibold text-purple-600 uppercase tracking-widest mb-3">
+              Day 3-4
             </div>
+            <h3 className="font-bold text-xl mb-3">Embed the channels</h3>
+            <p className="text-sm text-slate-600 leading-relaxed mb-4">
+              One script tag for the chat widget. One forwarding rule for the voice IVR. Both go
+              live in staging the same day.
+            </p>
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li className="flex items-center gap-2">
+                <span className="text-purple-500">✓</span> Chat widget on web + mobile app
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-500">✓</span> Voice IVR forwarding
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-500">✓</span> Brand-consistent styling
+              </li>
+            </ul>
+          </div>
+
+          <div className="p-7 rounded-2xl bg-white border border-slate-200">
+            <div className="text-xs font-semibold text-emerald-600 uppercase tracking-widest mb-3">
+              Day 5-7
+            </div>
+            <h3 className="font-bold text-xl mb-3">Go live with monitoring</h3>
+            <p className="text-sm text-slate-600 leading-relaxed mb-4">
+              Your CX leads get the operations dashboard. Frustration alerts fire to Slack. Senior
+              agents see escalations the moment they happen.
+            </p>
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500">✓</span> Real-time dashboard for ops
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500">✓</span> Slack/email frustration alerts
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500">✓</span> Agent console for escalations
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* ===== Feature deep-dive 2 (reversed) ===== */}
+      {/* ===== Feature deep-dive: Real Resolution ===== */}
       <section className="bg-slate-50 py-24">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -334,7 +438,7 @@ export default function Home() {
                     Active Conversation
                   </span>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
-                    Auto-resolved
+                    Auto-resolved · ₹15 cost
                   </span>
                 </div>
                 <div className="space-y-3 text-sm">
@@ -365,7 +469,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 mt-3 text-xs text-emerald-600 font-medium">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Refund of ₹1800 processed in 2.3s
+                    Refund of ₹1800 processed in 2.3s · No human needed
                   </div>
                 </div>
               </div>
@@ -373,15 +477,15 @@ export default function Home() {
 
             <div className="order-1 md:order-2">
               <p className="text-sm font-semibold text-emerald-600 uppercase tracking-widest mb-3">
-                Real Resolution
+                Real resolution
               </p>
               <h2 className="text-4xl font-bold tracking-tight mb-6 leading-tight">
                 Not just talk — actual action
               </h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 Athena doesn't just chat. She looks up real orders, processes real refunds, and
-                confirms by SMS — all within the conversation. Connected to your CRM, your order DB,
-                and your refund processor.
+                confirms by SMS — all within the conversation. Connected to your order DB, your
+                refund processor, your CRM.
               </p>
               <ul className="space-y-3 text-slate-700">
                 {[
@@ -407,10 +511,10 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 py-24">
         <div className="text-center mb-16">
           <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">
-            How it works
+            From customer call to resolution
           </p>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            From hello to resolved in 4 steps
+            How Athena handles a refund call
           </h2>
         </div>
 
@@ -418,23 +522,23 @@ export default function Home() {
           {[
             {
               step: '01',
-              title: 'Reach out',
-              desc: 'Customer calls, chats, or taps in-app voice button',
+              title: 'Customer reaches out',
+              desc: 'Via your chat widget, your support number, or in-app voice button',
             },
             {
               step: '02',
-              title: 'Diagnose',
-              desc: 'Athena pulls order, identifies issue, scores emotion',
+              title: 'Athena diagnoses',
+              desc: 'Pulls the order, identifies the issue, scores frustration in real-time',
             },
             {
               step: '03',
-              title: 'Resolve',
-              desc: 'Refund, replacement, or credit processed in seconds',
+              title: 'Resolves or escalates',
+              desc: 'Refund/replacement/credit issued OR handoff with full context',
             },
             {
               step: '04',
-              title: 'Escalate if needed',
-              desc: 'Frustration ≥ 7? Human takes over with full context',
+              title: 'Your team takes over',
+              desc: 'Senior agent picks up the angriest 5% — already informed',
             },
           ].map((s, i) => (
             <div
@@ -461,9 +565,9 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { name: 'Bolna', desc: 'Voice infrastructure' },
+              { name: 'Bolna', desc: 'Voice telephony · India-native' },
               { name: 'Gemini', desc: 'Frustration scoring' },
-              { name: 'Supabase', desc: 'Real-time data' },
+              { name: 'Supabase', desc: 'Real-time data layer' },
               { name: 'Vercel', desc: 'Edge hosting' },
             ].map((t) => (
               <div key={t.name} className="p-6 rounded-xl bg-white/5 border border-white/10">
@@ -479,9 +583,9 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 py-24">
         <div className="text-center mb-16">
           <p className="text-sm font-semibold text-purple-600 uppercase tracking-widest mb-3">
-            What people say
+            What CX leaders say
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Why teams love Athena</h2>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Why teams pick Athena</h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
@@ -495,13 +599,13 @@ export default function Home() {
             {
               quote:
                 'The frustration handoff is the killer feature. Our human agents only see the cases that actually need them.',
-              author: 'Customer Experience Director, Logistics Co.',
+              author: 'Customer Experience Director, Quick Commerce',
               initial: 'C',
             },
             {
               quote:
                 "Hinglish that doesn't sound like a robot. That alone changed our customer NPS.",
-              author: 'Founder, D2C Brand',
+              author: 'Head of Support, D2C Food Brand',
               initial: 'F',
             },
           ].map((t, i) => (
@@ -523,10 +627,11 @@ export default function Home() {
       <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
-            Try Athena in 30 seconds
+            Stop losing customers to hold music
           </h2>
           <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
-            Get a real call from Athena right now — or skip the phone and chat in your browser.
+            Get a real call from Athena right now. Or skip the phone and embed the chat widget in 3
+            lines of code.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
@@ -539,7 +644,7 @@ export default function Home() {
               href="/chat"
               className="px-8 py-4 rounded-xl bg-white/10 border border-white/20 text-white font-bold hover:bg-white/20 transition backdrop-blur-md"
             >
-              💬 Try chat instead
+              💬 Try the chat widget
             </Link>
           </div>
           <p className="text-xs text-slate-500 mt-8">
@@ -560,8 +665,8 @@ export default function Home() {
                 <span className="font-bold text-lg text-white">Athena</span>
               </div>
               <p className="text-sm leading-relaxed mb-4 max-w-xs">
-                Voice AI for Indian customer support. Resolves refunds, detects frustration,
-                escalates with empathy.
+                The customer support agent that knows when to call in a human. Built for India's
+                food delivery and quick commerce platforms.
               </p>
               <p className="text-xs text-slate-600">
                 Built in 2 days · Powered by Bolna · Live on Vercel
@@ -569,16 +674,16 @@ export default function Home() {
             </div>
 
             <div>
-              <h4 className="text-white font-semibold text-sm mb-4">Channels</h4>
+              <h4 className="text-white font-semibold text-sm mb-4">Modules</h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href="/chat" className="hover:text-white transition">
-                    Chat
+                    Chat Widget
                   </Link>
                 </li>
                 <li>
                   <Link href="/voice" className="hover:text-white transition">
-                    Voice Call
+                    Voice IVR
                   </Link>
                 </li>
                 <li>
@@ -597,7 +702,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Link href="/history" className="hover:text-white transition">
-                    Call History
+                    Analytics
                   </Link>
                 </li>
                 <li>

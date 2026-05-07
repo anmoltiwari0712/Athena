@@ -1,510 +1,430 @@
-'use client';
-
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  toolsCalled?: string[];
-  timestamp?: string;
-}
-
-const WELCOME: Message = {
-  role: 'assistant',
-  content:
-    'Namaste, main Athena hoon, customer support se. Main aapki order ya refund se related koi bhi issue solve karne mein madad kar sakti hoon. Kripya batayein, main aapki kaise sahayata kar sakti hoon?',
-  timestamp: new Date().toISOString(),
-};
-
-export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([WELCOME]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [toolsActivity, setToolsActivity] = useState<{ name: string; ts: string }[]>([]);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, loading]);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const handleSend = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
-
-    const userMsg: Message = { role: 'user', content: text, timestamp: new Date().toISOString() };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setInput('');
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
-        }),
-      });
-
-      const data = await res.json();
-      const ts = new Date().toISOString();
-
-      if (data.success && data.reply) {
-        const tools: string[] = data.tools_called || [];
-        if (tools.length > 0) {
-          setToolsActivity((prev) => [...tools.map((name) => ({ name, ts })), ...prev].slice(0, 8));
-        }
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: data.reply, toolsCalled: tools, timestamp: ts },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'assistant',
-            content:
-              'Mujhe khed hai, system mein kuch issue ho raha hai. Kripya thodi der baad try karein.',
-            timestamp: ts,
-          },
-        ]);
-      }
-    } catch (e) {
-      console.error(e);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Connection issue ho rahi hai. Kripya phir se try karein.',
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  const resetChat = () => {
-    setMessages([{ ...WELCOME, timestamp: new Date().toISOString() }]);
-    setInput('');
-    setToolsActivity([]);
-  };
-
-  const quickStarters = [
-    { text: 'Mera order galat aaya hai', icon: '🍱' },
-    { text: 'I want a refund', icon: '💰' },
-    { text: 'Order was cold', icon: '🥶' },
-    { text: 'Speak to a human', icon: '🙋' },
-  ];
-
-  const formatTime = (ts?: string) => {
-    if (!ts) return '';
-    const d = new Date(ts);
-    return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  };
-
-  const userMessageCount = messages.filter((m) => m.role === 'user').length;
-
-  return (
-    <main className="min-h-screen bg-slate-50">
-      {/* ===== Top nav (consistent with home) ===== */}
-      <nav className="border-b border-slate-200 sticky top-0 z-50 bg-white/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold">
-              A
-            </div>
-            <span className="font-bold text-lg tracking-tight text-slate-900">Athena</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
-            <Link href="/chat" className="text-slate-900 font-semibold">
-              Chat
-            </Link>
-            <Link href="/voice" className="hover:text-slate-900 transition">
-              Voice
-            </Link>
-            <Link href="/calls" className="hover:text-slate-900 transition">
-              Live Calls
-            </Link>
-            <Link href="/history" className="hover:text-slate-900 transition">
-              History
-            </Link>
-            <Link href="/agent-console" className="hover:text-slate-900 transition">
-              Agent Console
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/voice"
-              className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"
-            >
-              Get a call →
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* ===== Header strip ===== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-blue-300 font-semibold mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Channel · Browser-Based Chat
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Chat with Athena</h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            Same agent intelligence as the voice channel — accessible instantly in your browser. No
-            phone needed.
-          </p>
-        </div>
-      </div>
-
-      {/* ===== Main content area ===== */}
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="grid lg:grid-cols-[280px_1fr_280px] gap-6">
-          {/* === Left sidebar: Demo guide === */}
-          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
-                Demo Guide
-              </div>
-              <h3 className="font-bold text-slate-900 mb-3">Try this flow</h3>
-              <ol className="space-y-2.5 text-sm text-slate-700">
-                {[
-                  { n: '1', t: 'Say hi', d: 'Athena will greet you' },
-                  { n: '2', t: 'Ask for a refund', d: "She'll ask for your phone" },
-                  { n: '3', t: 'Use +919876543216', d: 'Real demo order linked' },
-                  { n: '4', t: 'Describe the issue', d: 'Cold food, wrong item, etc.' },
-                  { n: '5', t: 'Confirm refund', d: 'Real DB write happens' },
-                ].map((s) => (
-                  <li key={s.n} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
-                      {s.n}
-                    </div>
-                    <div>
-                      <div className="font-medium text-slate-900">{s.t}</div>
-                      <div className="text-xs text-slate-500">{s.d}</div>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200">
-              <div className="text-xs font-semibold uppercase tracking-wider text-purple-700 mb-2">
-                Pro tip
-              </div>
-              <p className="text-sm text-slate-700 leading-relaxed">
-                Be deliberately rude in the next response to see{' '}
-                <strong>frustration detection</strong> trigger an automatic human handoff.
-              </p>
-            </div>
-
-            <Link
-              href="/voice"
-              className="block p-5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition group"
-            >
-              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                Or try voice
-              </div>
-              <div className="font-bold mb-1 group-hover:translate-x-0.5 transition flex items-center gap-2">
-                📞 Get a phone call
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Real Hinglish voice in 5 seconds.
-              </p>
-            </Link>
-          </aside>
-
-          {/* === Center: Chat panel === */}
-          <section
-            className="flex flex-col rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/30 overflow-hidden"
-            style={{ minHeight: '75vh' }}
-          >
-            {/* Chat header */}
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-50/50 to-purple-50/50">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                    A
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
-                </div>
-                <div>
-                  <div className="font-semibold text-slate-900 flex items-center gap-2">
-                    Athena
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-700 font-medium uppercase tracking-wider">
-                      Online
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-500">
-                    Customer Support · Hinglish · Auto-resolves in &lt;3 min
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={resetChat}
-                className="text-xs text-slate-500 hover:text-slate-900 transition px-3 py-1.5 rounded-lg hover:bg-slate-100 font-medium"
-              >
-                ↻ Reset
-              </button>
-            </div>
-
-            {/* Messages */}
-            <div
-              ref={scrollRef}
-              className="flex-1 overflow-y-auto px-6 py-6 space-y-5 bg-slate-50/30"
-            >
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[75%] flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
-                  >
-                    {m.role === 'assistant' && (
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-[10px]">
-                          A
-                        </div>
-                        <span className="text-xs font-medium text-slate-600">Athena</span>
-                      </div>
-                    )}
-                    <div
-                      className={`px-5 py-3 rounded-2xl ${
-                        m.role === 'user'
-                          ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-tr-md shadow-lg shadow-blue-500/20'
-                          : 'bg-white text-slate-900 rounded-tl-md shadow-sm border border-slate-100'
-                      }`}
-                    >
-                      <div className="text-[15px] leading-relaxed whitespace-pre-wrap">
-                        {m.content}
-                      </div>
-                    </div>
-                    <div className="mt-1.5 flex items-center gap-2 px-1">
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {formatTime(m.timestamp)}
-                      </span>
-                      {m.toolsCalled && m.toolsCalled.length > 0 && (
-                        <div className="flex gap-1">
-                          {m.toolsCalled.map((t, ti) => (
-                            <span
-                              key={ti}
-                              className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-mono font-semibold"
-                            >
-                              ⚡ {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {loading && (
-                <div className="flex justify-start">
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-[10px]">
-                        A
-                      </div>
-                      <span className="text-xs font-medium text-slate-600">
-                        Athena is thinking…
-                      </span>
-                    </div>
-                    <div className="bg-white px-5 py-4 rounded-2xl rounded-tl-md shadow-sm border border-slate-100">
-                      <div className="flex gap-1.5">
-                        <div
-                          className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"
-                          style={{ animationDelay: '0ms' }}
-                        />
-                        <div
-                          className="w-2 h-2 rounded-full bg-purple-500 animate-bounce"
-                          style={{ animationDelay: '150ms' }}
-                        />
-                        <div
-                          className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"
-                          style={{ animationDelay: '300ms' }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Quick starters - only at start */}
-            {messages.length <= 1 && !loading && (
-              <div className="px-6 pb-2 border-t border-slate-100 pt-4 bg-slate-50/30">
-                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-2.5">
-                  Quick starters
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {quickStarters.map((s, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setInput(s.text)}
-                      className="text-sm px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition flex items-center gap-2"
-                    >
-                      <span>{s.icon}</span>
-                      <span>{s.text}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Input */}
-            <div className="border-t border-slate-100 p-4 bg-white">
-              <div className="flex gap-2 items-end">
-                <div className="flex-1 relative">
-                  <input
-                    ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    disabled={loading}
-                    placeholder="Type in English, Hindi, or Hinglish..."
-                    className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-[15px] disabled:opacity-50 transition"
-                  />
-                </div>
-                <button
-                  onClick={handleSend}
-                  disabled={loading || !input.trim()}
-                  className="px-6 py-3.5 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white font-semibold text-sm hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-blue-500/20 flex items-center gap-2"
-                >
-                  Send
-                  <span className="text-base">→</span>
-                </button>
-              </div>
-              <div className="mt-2 flex justify-between items-center text-[11px] text-slate-400">
-                <span>Press Enter to send</span>
-                <span>
-                  Powered by Gemini · {userMessageCount}{' '}
-                  {userMessageCount === 1 ? 'message' : 'messages'} sent
-                </span>
-              </div>
-            </div>
-          </section>
-
-          {/* === Right sidebar: Live tool feed + stats === */}
-          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Live Tool Activity
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-mono font-semibold">
-                  {toolsActivity.length}
-                </span>
-              </div>
-
-              {toolsActivity.length === 0 ? (
-                <div className="text-xs text-slate-400 italic py-4 text-center">
-                  No tools called yet. Try sharing your phone number to see{' '}
-                  <code className="font-mono not-italic">lookup_order</code> fire.
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {toolsActivity.map((t, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-2.5 p-2.5 rounded-lg bg-purple-50 border border-purple-100"
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-purple-200 flex items-center justify-center text-purple-700 text-xs">
-                        ⚡
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-mono font-semibold text-slate-900 truncate">
-                          {t.name}
-                        </div>
-                        <div className="text-[10px] text-slate-500">{formatTime(t.ts)}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
-                Available Tools
-              </div>
-              <ul className="space-y-2 text-sm">
-                {[
-                  { name: 'lookup_order', desc: 'Fetch order by phone' },
-                  { name: 'process_refund', desc: 'Issue a refund' },
-                  { name: 'escalate_to_human', desc: 'Transfer to agent' },
-                ].map((t) => (
-                  <li key={t.name} className="flex items-center justify-between py-1.5">
-                    <code className="text-xs font-mono text-slate-900">{t.name}</code>
-                    <span className="text-[10px] text-slate-500">{t.desc}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800">
-              <div className="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">
-                Watch it Live
-              </div>
-              <p className="text-sm text-slate-300 mb-4 leading-relaxed">
-                Every chat you have here writes to the same database the voice channel uses.
-              </p>
-              <Link
-                href="/calls"
-                className="text-sm font-semibold text-white hover:translate-x-0.5 inline-flex items-center gap-1 transition"
-              >
-                Open Live Calls dashboard →
-              </Link>
-            </div>
-          </aside>
-        </div>
-
-        {/* ===== Footer info bar ===== */}
-        <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="font-semibold text-slate-900 mb-1">
-              This is a real chat — not a mockup
-            </div>
-            <p className="text-sm text-slate-600">
-              Refunds you process here are written to a real Supabase database. Tools call real API
-              endpoints.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Link
-              href="/calls"
-              className="px-4 py-2 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-900 hover:border-blue-300 transition"
-            >
-              View dashboard
-            </Link>
-            <Link
-              href="/voice"
-              className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"
-            >
-              Try voice instead →
-            </Link>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-}
+'use client'; 
+ 
+import { useState, useEffect, useRef } from 'react'; 
+import Link from 'next/link'; 
+ 
+interface Message { 
+ role: 'user' | 'assistant'; 
+ content: string; 
+ toolsCalled?: string[]; 
+ timestamp?: string; 
+} 
+ 
+const WELCOME: Message = { 
+ role: 'assistant', 
+ content: 
+   'Namaste, main Athena hoon, customer support se. Main aapki order ya refund se related koi bhi issue solve karne mein madad kar sakti hoon. Kripya batayein, main aapki kaise sahayata kar sakti hoon?', 
+ timestamp: new Date().toISOString(), 
+}; 
+ 
+export default function ChatPage() { 
+ const [messages, setMessages] = useState<Message[]>([WELCOME]); 
+ const [input, setInput] = useState(''); 
+ const [loading, setLoading] = useState(false); 
+ const [toolsActivity, setToolsActivity] = useState<{ name: string; ts: string }[]>([]); 
+ const scrollRef = useRef<HTMLDivElement>(null); 
+ const inputRef = useRef<HTMLInputElement>(null); 
+ 
+ useEffect(() => { 
+   scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' }); 
+ }, [messages, loading]); 
+ 
+ useEffect(() => { 
+   inputRef.current?.focus(); 
+ }, []); 
+ 
+ const handleSend = async () => { 
+   const text = input.trim(); 
+   if (!text || loading) return; 
+ 
+   const userMsg: Message = { role: 'user', content: text, timestamp: new Date().toISOString() }; 
+   const newMessages = [...messages, userMsg]; 
+   setMessages(newMessages); 
+   setInput(''); 
+   setLoading(true); 
+ 
+   try { 
+     const res = await fetch('/api/chat', { 
+       method: 'POST', 
+       headers: { 'Content-Type': 'application/json' }, 
+       body: JSON.stringify({ 
+         messages: newMessages.map((m) => ({ role: m.role, content: m.content })), 
+       }), 
+     }); 
+ 
+     const data = await res.json(); 
+     const ts = new Date().toISOString(); 
+ 
+     if (data.success && data.reply) { 
+       const tools: string[] = data.tools_called || []; 
+       if (tools.length > 0) { 
+         setToolsActivity((prev) => [ 
+           ...tools.map((name) => ({ name, ts })), 
+           ...prev, 
+         ].slice(0, 8)); 
+       } 
+       setMessages((prev) => [ 
+         ...prev, 
+         { role: 'assistant', content: data.reply, toolsCalled: tools, timestamp: ts }, 
+       ]); 
+     } else { 
+       setMessages((prev) => [ 
+         ...prev, 
+         { 
+           role: 'assistant', 
+           content: 
+             'Mujhe khed hai, system mein kuch issue ho raha hai. Kripya thodi der baad try karein.', 
+           timestamp: ts, 
+         }, 
+       ]); 
+     } 
+   } catch (e) { 
+     console.error(e); 
+     setMessages((prev) => [ 
+       ...prev, 
+       { 
+         role: 'assistant', 
+         content: 'Connection issue ho rahi hai. Kripya phir se try karein.', 
+         timestamp: new Date().toISOString(), 
+       }, 
+     ]); 
+   } finally { 
+     setLoading(false); 
+   } 
+ }; 
+ 
+ const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => { 
+   if (e.key === 'Enter' && !e.shiftKey) { 
+     e.preventDefault(); 
+     handleSend(); 
+   } 
+ }; 
+ 
+ const resetChat = () => { 
+   setMessages([{ ...WELCOME, timestamp: new Date().toISOString() }]); 
+   setInput(''); 
+   setToolsActivity([]); 
+ }; 
+ 
+ const quickStarters = [ 
+   { text: 'Mera order galat aaya hai', icon: '🍱' }, 
+   { text: 'I want a refund', icon: '💰' }, 
+   { text: 'Order was cold', icon: '🥶' }, 
+   { text: 'Speak to a human', icon: '🙋' }, 
+ ]; 
+ 
+ const formatTime = (ts?: string) => { 
+   if (!ts) return ''; 
+   const d = new Date(ts); 
+   return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); 
+ }; 
+ 
+ const userMessageCount = messages.filter((m) => m.role === 'user').length; 
+ 
+ return ( 
+   <main className="min-h-screen bg-slate-50"> 
+     {/* Top nav */} 
+     <nav className="border-b border-slate-200 sticky top-0 z-50 bg-white/95 backdrop-blur-md"> 
+       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"> 
+         <Link href="/" className="flex items-center gap-2"> 
+           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold">A</div> 
+           <span className="font-bold text-lg tracking-tight text-slate-900">Athena</span> 
+         </Link> 
+ 
+         <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700"> 
+           <Link href="/chat" className="text-slate-900 font-semibold">Chat</Link> 
+           <Link href="/voice" className="hover:text-slate-900 transition">Voice</Link> 
+           <Link href="/calls" className="hover:text-slate-900 transition">Live Calls</Link> 
+           <Link href="/history" className="hover:text-slate-900 transition">History</Link> 
+           <Link href="/agent-console" className="hover:text-slate-900 transition">Agent Console</Link> 
+         </div> 
+ 
+         <Link href="/voice" className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"> 
+           Get a call → 
+         </Link> 
+       </div> 
+     </nav> 
+ 
+     {/* Header strip */} 
+     <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white"> 
+       <div className="max-w-7xl mx-auto px-6 py-14"> 
+         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-blue-300 font-semibold mb-3"> 
+           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> 
+           Chat Channel · Browser-Native 
+         </div> 
+         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Chat with Athena</h1> 
+         <p className="text-lg text-slate-300 max-w-2xl"> 
+           Same intelligence as the voice channel — without the phone call. Drop Athena into any web or mobile app and resolve refund issues in the same window your customer is already in. 
+         </p> 
+       </div> 
+     </div> 
+ 
+     <div className="max-w-7xl mx-auto px-6 py-10"> 
+       <div className="grid lg:grid-cols-[280px_1fr_280px] gap-6"> 
+         {/* Left sidebar */} 
+         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start"> 
+           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Demo guide</div> 
+             <ol className="space-y-2.5 text-sm text-slate-700"> 
+               {[ 
+                 { n: '1', t: 'Say hi', d: 'Athena greets in Hinglish' }, 
+                 { n: '2', t: 'Ask for a refund', d: 'She asks for your phone' }, 
+                 { n: '3', t: 'Use +919876543216', d: 'Real demo order linked' }, 
+                 { n: '4', t: 'Describe the issue', d: 'Cold food, wrong item, etc.' }, 
+                 { n: '5', t: 'Confirm refund', d: 'Real database write happens' }, 
+               ].map((s) => ( 
+                 <li key={s.n} className="flex items-start gap-3"> 
+                   <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"> 
+                     {s.n} 
+                   </div> 
+                   <div> 
+                     <div className="font-medium text-slate-900">{s.t}</div> 
+                     <div className="text-xs text-slate-500">{s.d}</div> 
+                   </div> 
+                 </li> 
+               ))} 
+             </ol> 
+           </div> 
+ 
+           <div className="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200"> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-purple-700 mb-2">Try this</div> 
+             <p className="text-sm text-slate-700 leading-relaxed"> 
+               Get visibly rude on your next message to watch <strong>frustration detection</strong> auto-escalate the chat to a human agent. 
+             </p> 
+           </div> 
+ 
+           <Link 
+             href="/voice" 
+             className="block p-5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition group" 
+           > 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Same agent, different surface</div> 
+             <div className="font-bold mb-1 group-hover:translate-x-0.5 transition flex items-center gap-2"> 
+               📞 Get a phone call 
+             </div> 
+             <p className="text-xs text-slate-400 leading-relaxed"> 
+               Real Hinglish voice in 5 seconds. 
+             </p> 
+           </Link> 
+         </aside> 
+ 
+         {/* Center: Chat panel */} 
+         <section className="flex flex-col rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/30 overflow-hidden" style={{ minHeight: '75vh' }}> 
+           <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-50/50 to-purple-50/50"> 
+             <div className="flex items-center gap-3"> 
+               <div className="relative"> 
+                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md"> 
+                   A 
+                 </div> 
+                 <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" /> 
+               </div> 
+               <div> 
+                 <div className="font-semibold text-slate-900 flex items-center gap-2"> 
+                   Athena 
+                   <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-700 font-medium uppercase tracking-wider">Online</span> 
+                 </div> 
+                 <div className="text-xs text-slate-500">Customer Support · Hinglish · Median resolution under 3 min</div> 
+               </div> 
+             </div> 
+             <button 
+               onClick={resetChat} 
+               className="text-xs text-slate-500 hover:text-slate-900 transition px-3 py-1.5 rounded-lg hover:bg-slate-100 font-medium" 
+             > 
+               ↻ Reset 
+             </button> 
+           </div> 
+ 
+           <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-5 bg-slate-50/30"> 
+             {messages.map((m, i) => ( 
+               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}> 
+                 <div className={`max-w-[75%] flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}> 
+                   {m.role === 'assistant' && ( 
+                     <div className="flex items-center gap-2 mb-1.5"> 
+                       <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-[10px]"> 
+                         A 
+                       </div> 
+                       <span className="text-xs font-medium text-slate-600">Athena</span> 
+                     </div> 
+                   )} 
+                   <div 
+                     className={`px-5 py-3 rounded-2xl ${ 
+                       m.role === 'user' 
+                         ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-tr-md shadow-lg shadow-blue-500/20' 
+                         : 'bg-white text-slate-900 rounded-tl-md shadow-sm border border-slate-100' 
+                     }`} 
+                   > 
+                     <div className="text-[15px] leading-relaxed whitespace-pre-wrap">{m.content}</div> 
+                   </div> 
+                   <div className="mt-1.5 flex items-center gap-2 px-1"> 
+                     <span className="text-[10px] text-slate-400 font-mono">{formatTime(m.timestamp)}</span> 
+                     {m.toolsCalled && m.toolsCalled.length > 0 && ( 
+                       <div className="flex gap-1"> 
+                         {m.toolsCalled.map((t, ti) => ( 
+                           <span 
+                             key={ti} 
+                             className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-mono font-semibold" 
+                           > 
+                             ⚡ {t} 
+                           </span> 
+                         ))} 
+                       </div> 
+                     )} 
+                   </div> 
+                 </div> 
+               </div> 
+             ))} 
+ 
+             {loading && ( 
+               <div className="flex justify-start"> 
+                 <div className="flex flex-col items-start"> 
+                   <div className="flex items-center gap-2 mb-1.5"> 
+                     <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-[10px]"> 
+                       A 
+                     </div> 
+                     <span className="text-xs font-medium text-slate-600">Athena is thinking…</span> 
+                   </div> 
+                   <div className="bg-white px-5 py-4 rounded-2xl rounded-tl-md shadow-sm border border-slate-100"> 
+                     <div className="flex gap-1.5"> 
+                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '0ms' }} /> 
+                       <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '150ms' }} /> 
+                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '300ms' }} /> 
+                     </div> 
+                   </div> 
+                 </div> 
+               </div> 
+             )} 
+           </div> 
+ 
+           {messages.length <= 1 && !loading && ( 
+             <div className="px-6 pb-2 border-t border-slate-100 pt-4 bg-slate-50/30"> 
+               <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-2.5">Quick starters</div> 
+               <div className="flex gap-2 flex-wrap"> 
+                 {quickStarters.map((s, i) => ( 
+                   <button 
+                     key={i} 
+                     onClick={() => setInput(s.text)} 
+                     className="text-sm px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition flex items-center gap-2" 
+                   > 
+                     <span>{s.icon}</span> 
+                     <span>{s.text}</span> 
+                   </button> 
+                 ))} 
+               </div> 
+             </div> 
+           )} 
+ 
+           <div className="border-t border-slate-100 p-4 bg-white"> 
+             <div className="flex gap-2 items-end"> 
+               <div className="flex-1 relative"> 
+                 <input 
+                   ref={inputRef} 
+                   value={input} 
+                   onChange={(e) => setInput(e.target.value)} 
+                   onKeyDown={handleKeyDown} 
+                   disabled={loading} 
+                   placeholder="Type in English, Hindi, or Hinglish..." 
+                   className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-[15px] disabled:opacity-50 transition" 
+                 /> 
+               </div> 
+               <button 
+                 onClick={handleSend} 
+                 disabled={loading || !input.trim()} 
+                 className="px-6 py-3.5 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white font-semibold text-sm hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-blue-500/20 flex items-center gap-2" 
+               > 
+                 Send 
+                 <span className="text-base">→</span> 
+               </button> 
+             </div> 
+             <div className="mt-2 flex justify-between items-center text-[11px] text-slate-400"> 
+               <span>Press Enter to send · Shift+Enter for new line</span> 
+               <span>Powered by Gemini · {userMessageCount} {userMessageCount === 1 ? 'message' : 'messages'} sent</span> 
+             </div> 
+           </div> 
+         </section> 
+ 
+         {/* Right sidebar */} 
+         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start"> 
+           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
+             <div className="flex items-center justify-between mb-3"> 
+               <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Live tool activity</div> 
+               <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-mono font-semibold"> 
+                 {toolsActivity.length} 
+               </span> 
+             </div> 
+ 
+             {toolsActivity.length === 0 ? ( 
+               <div className="text-xs text-slate-400 italic py-4 text-center"> 
+                 No tools called yet. Share your phone number to watch <code className="font-mono not-italic">lookup_order</code> fire in real time. 
+               </div> 
+             ) : ( 
+               <ul className="space-y-2"> 
+                 {toolsActivity.map((t, i) => ( 
+                   <li 
+                     key={i} 
+                     className="flex items-center gap-2.5 p-2.5 rounded-lg bg-purple-50 border border-purple-100" 
+                   > 
+                     <div className="w-7 h-7 rounded-lg bg-purple-200 flex items-center justify-center text-purple-700 text-xs"> 
+                       ⚡ 
+                     </div> 
+                     <div className="flex-1 min-w-0"> 
+                       <div className="text-xs font-mono font-semibold text-slate-900 truncate"> 
+                         {t.name} 
+                       </div> 
+                       <div className="text-[10px] text-slate-500">{formatTime(t.ts)}</div> 
+                     </div> 
+                   </li> 
+                 ))} 
+               </ul> 
+             )} 
+           </div> 
+ 
+           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Available tools</div> 
+             <ul className="space-y-2 text-sm"> 
+               {[ 
+                 { name: 'lookup_order', desc: 'Fetch order by phone' }, 
+                 { name: 'process_refund', desc: 'Issue a refund' }, 
+                 { name: 'escalate_to_human', desc: 'Transfer to agent' }, 
+               ].map((t) => ( 
+                 <li key={t.name} className="flex items-center justify-between py-1.5"> 
+                   <code className="text-xs font-mono text-slate-900">{t.name}</code> 
+                   <span className="text-[10px] text-slate-500">{t.desc}</span> 
+                 </li> 
+               ))} 
+             </ul> 
+           </div> 
+ 
+           <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800"> 
+             <div className="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">Watch it live</div> 
+             <p className="text-sm text-slate-300 mb-4 leading-relaxed"> 
+               Every chat here writes to the same database the voice channel uses. One source of truth. 
+             </p> 
+             <Link 
+               href="/calls" 
+               className="text-sm font-semibold text-white hover:translate-x-0.5 inline-flex items-center gap-1 transition" 
+             > 
+               Open Live Calls dashboard → 
+             </Link> 
+           </div> 
+         </aside> 
+       </div> 
+ 
+       <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 flex flex-col md:flex-row md:items-center justify-between gap-4"> 
+         <div> 
+           <div className="font-semibold text-slate-900 mb-1">This is a real chat — not a mockup</div> 
+           <p className="text-sm text-slate-600"> 
+             Refunds you process here are written to a real Supabase database. Tools call real production endpoints. 
+           </p> 
+         </div> 
+         <div className="flex gap-3"> 
+           <Link href="/calls" className="px-4 py-2 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-900 hover:border-blue-300 transition"> 
+             View dashboard 
+           </Link> 
+           <Link href="/voice" className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"> 
+             Try voice instead → 
+           </Link> 
+         </div> 
+       </div> 
+     </div> 
+   </main> 
+ ); 
+} 
