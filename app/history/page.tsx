@@ -1,6 +1,5 @@
 
 
-
 'use client'; 
  
 import { useEffect, useState } from 'react'; 
@@ -41,6 +40,11 @@ export default function HistoryPage() {
  const escalationRate = stats.total > 0 ? (stats.escalated / stats.total) * 100 : 0; 
  const resolutionRate = stats.total > 0 ? (stats.resolved / stats.total) * 100 : 0; 
  
+ // ROI math (illustrative) 
+ const aiCost = stats.total * 17; 
+ const humanCostEquivalent = stats.total * 100; 
+ const savedAmount = humanCostEquivalent - aiCost; 
+ 
  return ( 
    <main className="min-h-screen bg-slate-50"> 
      {/* Top nav */} 
@@ -51,10 +55,10 @@ export default function HistoryPage() {
            <span className="font-bold text-lg tracking-tight text-slate-900">Athena</span> 
          </Link> 
          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700"> 
-           <Link href="/chat" className="hover:text-slate-900 transition">Chat</Link> 
-           <Link href="/voice" className="hover:text-slate-900 transition">Voice</Link> 
+           <Link href="/chat" className="hover:text-slate-900 transition">Chat Widget</Link> 
+           <Link href="/voice" className="hover:text-slate-900 transition">Voice IVR</Link> 
            <Link href="/calls" className="hover:text-slate-900 transition">Live Calls</Link> 
-           <Link href="/history" className="text-slate-900 font-semibold">History</Link> 
+           <Link href="/history" className="text-slate-900 font-semibold">Analytics</Link> 
            <Link href="/agent-console" className="hover:text-slate-900 transition">Agent Console</Link> 
          </div> 
          <Link href="/voice" className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"> 
@@ -65,43 +69,83 @@ export default function HistoryPage() {
  
      {/* Header strip */} 
      <div className="bg-gradient-to-br from-blue-950 via-slate-950 to-purple-950 text-white"> 
-       <div className="max-w-7xl mx-auto px-6 py-12"> 
+       <div className="max-w-7xl mx-auto px-6 py-14"> 
          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-blue-300 font-semibold mb-3"> 
            <span className="w-1.5 h-1.5 rounded-full bg-blue-400" /> 
-           Operations · Analytics 
+           Operations · Analytics & ROI 
          </div> 
-         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Call History</h1> 
+         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3"> 
+           The numbers your CFO will ask for 
+         </h1> 
          <p className="text-lg text-slate-300 max-w-2xl"> 
-           Every conversation Athena has had — voice and chat. Track resolution rates, escalation patterns, and emotional trends across the customer base. 
+           Resolution rate, escalation rate, frustration trajectory, and cost-per-call — across voice and chat. Quantify the impact Athena is having on your support floor in one screen. 
          </p> 
        </div> 
      </div> 
  
      <div className="max-w-7xl mx-auto px-6 py-10 space-y-8"> 
        {/* Stats grid */} 
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> 
-         {[ 
-           { label: 'Total Calls', value: stats.total.toString(), color: 'from-blue-500 to-cyan-500', detail: 'Voice + Chat combined' }, 
-           { label: 'Escalated', value: stats.escalated.toString(), color: 'from-red-500 to-orange-500', detail: `${escalationRate.toFixed(1)}% of total` }, 
-           { label: 'Auto-Resolved', value: stats.resolved.toString(), color: 'from-emerald-500 to-green-500', detail: `${resolutionRate.toFixed(1)}% of total` }, 
-           { label: 'Avg Frustration', value: stats.avgFrustration.toFixed(1), color: 'from-amber-500 to-yellow-500', detail: 'Out of 10' }, 
-         ].map((s, i) => ( 
-           <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
-             <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">{s.label}</div> 
-             <div className={`text-4xl font-bold bg-gradient-to-br ${s.color} bg-clip-text text-transparent mb-1`}> 
-               {s.value} 
-             </div> 
-             <div className="text-xs text-slate-500">{s.detail}</div> 
+       <div> 
+         <div className="flex items-end justify-between mb-4"> 
+           <div> 
+             <h2 className="text-xl font-bold text-slate-900">Performance at a glance</h2> 
+             <p className="text-sm text-slate-500">All-time metrics across both channels</p> 
            </div> 
-         ))} 
+         </div> 
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> 
+           {[ 
+             { label: 'Total Conversations', value: stats.total.toString(), color: 'from-blue-500 to-cyan-500', detail: 'Voice + chat combined' }, 
+             { label: 'Auto-Resolved', value: `${resolutionRate.toFixed(0)}%`, color: 'from-emerald-500 to-green-500', detail: `${stats.resolved} of ${stats.total} without humans` }, 
+             { label: 'Escalation Rate', value: `${escalationRate.toFixed(0)}%`, color: 'from-red-500 to-orange-500', detail: `${stats.escalated} needed senior agents` }, 
+             { label: 'Avg Frustration', value: stats.avgFrustration.toFixed(1), color: 'from-amber-500 to-yellow-500', detail: 'Out of 10' }, 
+           ].map((s, i) => ( 
+             <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm"> 
+               <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">{s.label}</div> 
+               <div className={`text-4xl font-bold bg-gradient-to-br ${s.color} bg-clip-text text-transparent mb-1`}> 
+                 {s.value} 
+               </div> 
+               <div className="text-xs text-slate-500">{s.detail}</div> 
+             </div> 
+           ))} 
+         </div> 
+       </div> 
+ 
+       {/* ROI strip */} 
+       <div className="rounded-2xl bg-gradient-to-br from-slate-950 via-emerald-950 to-blue-950 text-white p-8 shadow-xl border border-emerald-500/20"> 
+         <div className="grid md:grid-cols-3 gap-6 items-center"> 
+           <div> 
+             <div className="text-xs font-semibold uppercase tracking-widest text-emerald-300 mb-2">ROI snapshot</div> 
+             <h3 className="text-2xl font-bold tracking-tight mb-2">What this saved you</h3> 
+             <p className="text-sm text-slate-300 leading-relaxed"> 
+               Cost-per-call with AI versus the human-only baseline. Multiply by your real call volume to get monthly savings. 
+             </p> 
+           </div> 
+           <div className="grid grid-cols-2 gap-4 md:col-span-2"> 
+             <div className="p-4 rounded-xl bg-white/5 border border-white/10"> 
+               <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Athena cost</div> 
+               <div className="text-3xl font-bold font-mono text-emerald-300">₹{aiCost.toLocaleString('en-IN')}</div> 
+               <div className="text-[10px] text-slate-500 mt-1">@ ₹17/call avg</div> 
+             </div> 
+             <div className="p-4 rounded-xl bg-white/5 border border-white/10"> 
+               <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Human-only baseline</div> 
+               <div className="text-3xl font-bold font-mono text-slate-400 line-through opacity-60">₹{humanCostEquivalent.toLocaleString('en-IN')}</div> 
+               <div className="text-[10px] text-slate-500 mt-1">@ ₹100/call avg</div> 
+             </div> 
+             <div className="col-span-2 p-4 rounded-xl bg-emerald-500/10 border border-emerald-400/30"> 
+               <div className="text-xs text-emerald-300 uppercase tracking-wider mb-1">Saved across these {stats.total} calls</div> 
+               <div className="text-4xl font-bold font-mono text-emerald-300">₹{savedAmount.toLocaleString('en-IN')}</div> 
+               <div className="text-[11px] text-slate-400 mt-1">Scale this to your real call volume — most platforms see 6-figure monthly savings.</div> 
+             </div> 
+           </div> 
+         </div> 
        </div> 
  
        {/* Calls table */} 
        <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden"> 
          <div className="p-5 border-b border-slate-100 flex items-center justify-between"> 
            <div> 
-             <div className="text-sm font-semibold text-slate-900">All Conversations</div> 
-             <div className="text-xs text-slate-500 mt-0.5">Sorted by most recent</div> 
+             <div className="text-sm font-semibold text-slate-900">Conversation log</div> 
+             <div className="text-xs text-slate-500 mt-0.5">Every voice call and chat session, exportable for your QA team</div> 
            </div> 
            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-semibold"> 
              {calls.length} total 
@@ -123,7 +167,7 @@ export default function HistoryPage() {
                {calls.length === 0 && ( 
                  <tr> 
                    <td colSpan={5} className="text-center py-12 text-slate-500 text-sm"> 
-                     No calls yet. Start by getting a voice call or chatting with Athena. 
+                     No conversations yet. Place a voice call or chat — entries land here automatically. 
                    </td> 
                  </tr> 
                )} 
@@ -163,6 +207,37 @@ export default function HistoryPage() {
                })} 
              </tbody> 
            </table> 
+         </div> 
+       </div> 
+ 
+       {/* What this powers */} 
+       <div> 
+         <div className="text-center mb-8"> 
+           <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">Built for management review</p> 
+           <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">What this analytics view powers</h2> 
+         </div> 
+         <div className="grid md:grid-cols-3 gap-4"> 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200"> 
+             <div className="text-2xl mb-2">📉</div> 
+             <div className="font-semibold text-slate-900 text-sm mb-1">Quarterly board reviews</div> 
+             <p className="text-xs text-slate-500 leading-relaxed"> 
+               Show the CX cost curve bending. Resolution rate climbing month-over-month. AI savings against headcount baseline. 
+             </p> 
+           </div> 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200"> 
+             <div className="text-2xl mb-2">🔍</div> 
+             <div className="font-semibold text-slate-900 text-sm mb-1">Root-cause investigation</div> 
+             <p className="text-xs text-slate-500 leading-relaxed"> 
+               Filter to high-frustration calls. Find the merchant, the SKU, the time-of-day causing churn. Fix the upstream issue. 
+             </p> 
+           </div> 
+           <div className="p-6 rounded-2xl bg-white border border-slate-200"> 
+             <div className="text-2xl mb-2">📋</div> 
+             <div className="font-semibold text-slate-900 text-sm mb-1">QA & training data</div> 
+             <p className="text-xs text-slate-500 leading-relaxed"> 
+               Export transcripts. Train your human agents on real escalation patterns. Improve handoff quality over time. 
+             </p> 
+           </div> 
          </div> 
        </div> 
      </div> 
