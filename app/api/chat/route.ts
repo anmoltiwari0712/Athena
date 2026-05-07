@@ -154,8 +154,15 @@ export async function POST(req: NextRequest) {
         });
 
         // Convert chat history to Gemini format
-        const history = messages.slice(0, -1).map((m) => ({
+        let historySource = messages.slice(0, -1);
+
+        while (historySource.length > 0 && historySource[0].role !== 'user') {
+          historySource = historySource.slice(1);
+        }
+
+        const history = historySource.map((m) => ({
           role: m.role === 'assistant' ? 'model' : 'user',
+
           parts: [{ text: m.content }],
         }));
 
