@@ -99,45 +99,7 @@ interface ChatMessage {
 
 const BASE_URL = 'https://athena-taupe.vercel.app';
 
-async function executeTool(name: string, args: Record<string, unknown>): Promise<unknown> {
-  console.log(`[chat] executing tool: ${name}`, args);
 
-  const endpointMap: Record<string, string> = {
-    lookup_order: '/api/lookup-order',
-    process_refund: '/api/process-refund',
-    escalate_to_human: '/api/escalate',
-  };
-
-  const endpoint = endpointMap[name];
-  if (!endpoint) return { success: false, error: `Unknown tool: ${name}` };
-
-  try {
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(args),
-    });
-
-    const contentType = res.headers.get('content-type') || '';
-
-    // Guard: if we got HTML back (auth redirect, error page), don't try to parse as JSON
-    if (!contentType.includes('application/json')) {
-      const text = await res.text();
-      console.error(`[chat] tool ${name} returned non-JSON (${res.status}):`, text.slice(0, 200));
-      return {
-        success: false,
-        error: `Tool ${name} returned HTML instead of JSON (status ${res.status})`,
-      };
-    }
-
-    const data = await res.json();
-    console.log(`[chat] tool ${name} result:`, JSON.stringify(data).slice(0, 300));
-    return data;
-  } catch (e) {
-    console.error(`[chat] tool ${name} threw:`, e);
-    return { success: false, error: `Tool execution failed: ${(e as Error).message}` };
-  }
-}
 async function executeTool(name: string, args: Record<string, unknown>): Promise<unknown> {
   console.log(`[chat] executing tool: ${name}`, args);
 
